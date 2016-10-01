@@ -9,6 +9,7 @@ namespace ToyMQ.MessageQueue {
         static AdapterFactory() {
             factories_ = new List<IAdapterFactory>();
             factories_.Add(new TCPAdapterFactory());
+            factories_.Add(new PipeAdapterFactory());
         }
 
         private static IAdapterFactory FindFactory(string url) {
