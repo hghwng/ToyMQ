@@ -38,6 +38,7 @@
     <Compile Include="MessageQueue\Adapter\TCPAdapter.cs" />
     <Compile Include="MessageQueue\AdapterFactory.cs" />
     <Compile Include="MessageQueue\Adapter\PipeAdapter.cs" />
+    <Compile Include="MessageQueue\Message.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
