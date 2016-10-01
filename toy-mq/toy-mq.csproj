@@ -35,6 +35,9 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MessageQueue\Adapter\IAdapter.cs" />
+    <Compile Include="MessageQueue\Adapter\TCPAdapter.cs" />
+    <Compile Include="MessageQueue\AdapterFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
