@@ -17,7 +17,7 @@ namespace ToyMQ.MessageQueue.Adapter {
         }
 
         public bool IsProtocolSupported(string url) {
-            return VerifyUri(new Uri(url));
+            return url.StartsWith("tcp://");
         }
 
         public IAdapterServer CreateServer(string url) {
