@@ -7,10 +7,25 @@ using ToyMQ.Serializer;
 namespace ToyMQ {
     class MainClass {
         public static void Main(string[] args) {
-            if (args[0] == "server") {
-                ToyMQ.Test.MessageQueue.RunServer();
-            } else {
-                ToyMQ.Test.MessageQueue.RunClient();
+            switch (args[0]) {
+                case "mq": {
+                    if (args[0] == "server") {
+                        ToyMQ.Test.MessageQueue.RunServer();
+                    } else {
+                        ToyMQ.Test.MessageQueue.RunClient();
+                    }
+                    break;
+                }
+
+                case "serial": {
+                    ToyMQ.Test.SerializerTest.Test();
+                    break;
+                }
+
+                default: {
+                    Console.WriteLine("Invalid test");
+                    break;
+                }
             }
         }
     }
