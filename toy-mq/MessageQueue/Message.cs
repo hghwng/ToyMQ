@@ -18,12 +18,12 @@ namespace ToyMQ.MessageQueue {
             var offset = 0;
             byte[] buffer;
 
-            buffer = PrimitiveSerializer.Serialize(Envelopes.Count);
+            buffer = FieldSerializer.Serialize(Envelopes.Count);
             buffer.CopyTo(result, offset);
             offset += buffer.Length;
 
             foreach (var envelope in Envelopes) {
-                buffer = PrimitiveSerializer.Serialize(envelope.Length);
+                buffer = FieldSerializer.Serialize(envelope.Length);
                 buffer.CopyTo(result, offset);
                 offset += buffer.Length;
             }
@@ -46,14 +46,11 @@ namespace ToyMQ.MessageQueue {
 
         public Message(byte[] data) {
             Envelopes = new List<byte[]>();
+            var offset = 0;
 
-            int offset = 0;
-            UInt32 envelopeCount;
-            PrimitiveSerializer.Deserialize(data, ref offset, out envelopeCount);
-
+            var envelopeCount = FieldSerializer.Deserialize<UInt32>(data, ref offset);
             for (int i = 0; i < envelopeCount; ++i) {
-                int envelopeLength;
-                PrimitiveSerializer.Deserialize(data, ref offset, out envelopeLength);
+                var envelopeLength = FieldSerializer.Deserialize<int>(data, ref offset);
                 Envelopes.Add(new byte[envelopeLength]);
             }
 
@@ -65,21 +62,13 @@ namespace ToyMQ.MessageQueue {
 
         public static Message ReceiveFrom(IAdapter adapter) {
             var msg = new Message();
-
             var buffer = new byte[4];
-            int offset;
 
-            UInt32 envelopeCount;
             adapter.Receive(buffer);
-            offset = 0;
-            PrimitiveSerializer.Deserialize(buffer, ref offset, out envelopeCount);
-
+            var envelopeCount = FieldSerializer.Deserialize<UInt32>(buffer);
             for (int i = 0; i < envelopeCount; ++i) {
-                UInt32 envelopeLength;
                 adapter.Receive(buffer);
-                offset = 0;
-                PrimitiveSerializer.Deserialize(buffer, ref offset, out envelopeLength);
-
+                var envelopeLength = FieldSerializer.Deserialize<UInt32>(buffer);
                 msg.Envelopes.Add(new byte[envelopeLength]);
             }
 

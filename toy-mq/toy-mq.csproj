@@ -41,10 +41,10 @@
     <Compile Include="MessageQueue\Adapter\PipeAdapter.cs" />
     <Compile Include="Serializer\Attribute.cs" />
     <Compile Include="Serializer\IFieldSerializer.cs" />
-    <Compile Include="Serializer\IntegerSerializer.cs" />
-    <Compile Include="Serializer\PrimitiveSerializer.cs" />
     <Compile Include="MessageQueue\Message.cs" />
     <Compile Include="Test\MessageQueue.cs" />
+    <Compile Include="Serializer\PrimitiveFieldSerializer.cs" />
+    <Compile Include="Serializer\FieldSerializer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

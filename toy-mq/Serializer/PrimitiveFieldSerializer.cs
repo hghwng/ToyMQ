@@ -1,9 +1,17 @@
 using System;
 using System.Reflection;
+using ToyMQ.Serializer;
 
 namespace ToyMQ.Serializer {
-    public class PrimitiveSerializer {
-        private static byte[] SerializeInteger(object obj) {
+    public class PrimitiveFieldSerializer : IFieldSerializer {
+        public Type[] GetSupportedTypes() {
+            return new Type[] {typeof(System.Int16), typeof(System.UInt16),
+                               typeof(System.Int32), typeof(System.UInt32),
+                               typeof(System.Int64), typeof(System.UInt64)
+            };
+        }
+
+        public byte[] Serialize(object obj) {
             var type = obj.GetType();
             UInt64 val = (UInt64)Convert.ChangeType(obj, typeof(UInt64));
             var tmp = new byte[] {
@@ -29,7 +37,7 @@ namespace ToyMQ.Serializer {
             throw new ArgumentException("Unsupported data type");
         }
 
-        private static object DeserializeInteger(byte[] data, ref int offset, Type type) {
+        public object Deserialize(byte[] data, ref int offset, Type type) {
             UInt64 value = (UInt64)data[offset] | (UInt64)data[offset + 1] >> 8;
 
             if (type == typeof(System.Int16) || type == typeof(System.UInt16)) {
@@ -54,43 +62,6 @@ namespace ToyMQ.Serializer {
 
         finished:
             return Convert.ChangeType(value, type);
-        }
-
-        public static byte[] Serialize(Int16 value) { return SerializeInteger(value); }
-        public static byte[] Serialize(UInt16 value) { return SerializeInteger(value); }
-        public static byte[] Serialize(Int32 value) { return SerializeInteger(value); }
-        public static byte[] Serialize(UInt32 value) { return SerializeInteger(value); }
-        public static byte[] Serialize(Int64 value) { return SerializeInteger(value); }
-        public static byte[] Serialize(UInt64 value) { return SerializeInteger(value); }
-
-        public static void Deserialize(byte[] data, ref int offset, out Int16 value) {
-            Int16 tmp = (Int16)DeserializeInteger(data, ref offset, typeof(Int16));
-            value = tmp;
-        }
-
-        public static void Deserialize(byte[] data, ref int offset, out UInt16 value) {
-            UInt16 tmp = (UInt16)DeserializeInteger(data, ref offset, typeof(UInt16));
-            value = tmp;
-        }
-
-        public static void Deserialize(byte[] data, ref int offset, out Int32 value) {
-            Int32 tmp = (Int32)DeserializeInteger(data, ref offset, typeof(Int32));
-            value = tmp;
-        }
-
-        public static void Deserialize(byte[] data, ref int offset, out UInt32 value) {
-            UInt32 tmp = (UInt32)DeserializeInteger(data, ref offset, typeof(UInt32));
-            value = tmp;
-        }
-
-        public static void Deserialize(byte[] data, ref int offset, out Int64 value) {
-            Int64 tmp = (Int64)DeserializeInteger(data, ref offset, typeof(Int64));
-            value = tmp;
-        }
-
-        public static void Deserialize(byte[] data, ref int offset, out UInt64 value) {
-            UInt64 tmp = (UInt64)DeserializeInteger(data, ref offset, typeof(UInt64));
-            value = tmp;
         }
     }
 }
