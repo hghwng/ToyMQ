@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ToyMQ.MessageQueue.Adapter;
+using ToyMQ.Adapter;
 using ToyMQ.Serializer;
 
 namespace ToyMQ.MessageQueue {

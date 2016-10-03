@@ -1,9 +1,8 @@
 using System;
 using System.IO;
-using ToyMQ.MessageQueue.Adapter;
 using System.Runtime.InteropServices;
 
-namespace ToyMQ.MessageQueue.Adapter {
+namespace ToyMQ.Adapter {
     public class PipeAdapterFactory : IAdapterFactory {
         private string SubString(string s, int start, int end) {
             return s.Substring(start, end - start);

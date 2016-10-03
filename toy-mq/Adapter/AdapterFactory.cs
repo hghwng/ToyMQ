@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToyMQ.MessageQueue.Adapter;
+using ToyMQ.Adapter;
 
-namespace ToyMQ.MessageQueue {
+namespace ToyMQ.Adapter {
     public class AdapterFactory {
         private static List<IAdapterFactory> factories_;
 

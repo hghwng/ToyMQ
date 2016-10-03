@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using ToyMQ.MessageQueue;
 
 namespace ToyMQ.Serializer {
     public interface IFieldSerializer {

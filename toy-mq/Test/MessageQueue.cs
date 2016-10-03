@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+using ToyMQ.Adapter;
 using ToyMQ.MessageQueue;
 
 namespace ToyMQ.Test {

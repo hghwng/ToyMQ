@@ -1,6 +1,6 @@
 using System;
 
-namespace ToyMQ.MessageQueue.Adapter {
+namespace ToyMQ.Adapter {
 	public interface IAdapterFactory {
 		bool IsProtocolSupported(string url);
 		IAdapterServer CreateServer(string url);

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using ToyMQ.MessageQueue.Adapter;
 
 
-namespace ToyMQ.MessageQueue.Adapter {
+namespace ToyMQ.Adapter {
     public class TCPAdapterFactory : IAdapterFactory {
         private bool VerifyUri(Uri uri) {
             return uri.Scheme.ToLower() == "tcp";
