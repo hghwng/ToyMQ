@@ -20,6 +20,11 @@ namespace ToyMQ {
                     break;
                 }
 
+                case "proxy": {
+                    ToyMQ.Test.ProxyTest.TestProxyfier();
+                    break;
+                }
+
                 default: {
                     Console.WriteLine("Invalid test");
                     break;

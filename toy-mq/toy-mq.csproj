@@ -46,6 +46,9 @@
     <Compile Include="Adapter\PipeAdapter.cs" />
     <Compile Include="Adapter\TCPAdapter.cs" />
     <Compile Include="MessageQueue\Message.cs" />
+    <Compile Include="Test\Proxy.cs" />
+    <Compile Include="Proxy\Proxyfier.cs" />
+    <Compile Include="Proxy\ProxyHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
