@@ -21,7 +21,11 @@ namespace ToyMQ {
                 }
 
                 case "proxy": {
-                    ToyMQ.Test.ProxyTest.TestProxyfier();
+                    if (args[1] == "server") {
+                        ToyMQ.Test.ProxyTest.RunServer();
+                    } else {
+                        ToyMQ.Test.ProxyTest.RunClient();
+                    }
                     break;
                 }
 
