@@ -1,34 +1,35 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
 
 namespace ToyMQ.Proxy {
     public class Proxifier {
-        private Type targetType_;
-        private TypeBuilder proxyBuilder_;
-        private AssemblyBuilder assBuilder_;
-
         public static object OnProxifiedCall(object[] args) {
-            Console.WriteLine("Call: " + args.Length);
-            return null;
+            var self = args[0];
+            var proxyHandlerField = self.GetType().GetField("__handler", BindingFlags.NonPublic);
+            var proxyHandler = (ProxyHandler)proxyHandlerField.GetValue(self);
+            var calleeFrame = new StackFrame(1, false);
+            var calleeMethod = calleeFrame.GetMethod();
+            return proxyHandler.HandleCall(calleeMethod, args);
         }
 
-        private void CreateTypeBuilder() {
+        private static TypeBuilder CreateTypeBuilder(Type targetType) {
             var assName = new AssemblyName("ToyMQ.Proxyfied");
-            assBuilder_ = AppDomain.CurrentDomain.DefineDynamicAssembly(assName, AssemblyBuilderAccess.RunAndSave);
-            var moduleBuilder = assBuilder_.DefineDynamicModule(assName.Name, assName.Name + ".dll");
-            var typeBuilder = moduleBuilder.DefineType("ToyMQ.Proxyfied." + targetType_.FullName,
+            var assBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assName, AssemblyBuilderAccess.RunAndSave);
+            var moduleBuilder = assBuilder.DefineDynamicModule(assName.Name, assName.Name + ".dll");
+            var typeBuilder = moduleBuilder.DefineType("ToyMQ.Proxyfied." + targetType.FullName,
                                                        TypeAttributes.Class | TypeAttributes.Public);
-            typeBuilder.AddInterfaceImplementation(targetType_);
-            proxyBuilder_ = typeBuilder;
+            typeBuilder.AddInterfaceImplementation(targetType);
+            return typeBuilder;
         }
 
-        private void BuildProxyForMethod(MethodInfo targetMethod) {
+        private static void BuildMethod(TypeBuilder proxyBuilder, MethodInfo targetMethod) {
             var parameters = targetMethod.GetParameters();
             var types = new Type[parameters.Length];
             for (int i = 0; i < parameters.Length; ++i) types[i] = parameters[i].ParameterType;
 
-            var proxyMethod = proxyBuilder_.DefineMethod(
+            var proxyMethod = proxyBuilder.DefineMethod(
                 targetMethod.Name,
                 MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig,
                 targetMethod.ReturnType, types);
@@ -70,16 +71,16 @@ namespace ToyMQ.Proxy {
             proxyIL.Emit(OpCodes.Ret);
         }
 
-        private void BuildProxyForType() {
-            foreach (var targetMethod in targetType_.GetMethods()) {
+        private static void BuildMethods(TypeBuilder builder, Type targetType) {
+            foreach (var targetMethod in targetType.GetMethods()) {
                 if (!targetMethod.IsPublic) continue;
-                BuildProxyForMethod(targetMethod);
+                BuildMethod(builder, targetMethod);
             }
         }
 
-        private void BuildProxyForConstructor() {
-            var handler = proxyBuilder_.DefineField("__handler", typeof(ProxyHandler), FieldAttributes.Private);
-            var constructor = proxyBuilder_.DefineConstructor(
+        private static void BuildConstructor(TypeBuilder proxyBuilder) {
+            var handler = proxyBuilder.DefineField("__handler", typeof(ProxyHandler), FieldAttributes.Private);
+            var constructor = proxyBuilder.DefineConstructor(
                 MethodAttributes.Public, CallingConventions.Standard,
                 new Type[] { typeof(ProxyHandler) });
             var generator = constructor.GetILGenerator();
@@ -89,16 +90,16 @@ namespace ToyMQ.Proxy {
             generator.Emit(OpCodes.Ret);
         }
 
-        public Proxifier(Type type) {
-            targetType_ = type;
-            CreateTypeBuilder();
-            BuildProxyForConstructor();
-            BuildProxyForType();
+        public static object BuildObject(Type type, ProxyHandler handler) {
+            var builder = CreateTypeBuilder(type);
+            BuildConstructor(builder);
+            BuildMethods(builder, type);
+            Type proxy = builder.CreateType();
+            return Activator.CreateInstance(proxy, new object[] {handler});
         }
 
-        public object GetObject(ProxyHandler handler) {
-            Type proxy = this.proxyBuilder_.CreateType();
-            return Activator.CreateInstance(proxy, new object[] {handler});
+        public static T BuildObject<T>(ProxyHandler handler) {
+            return (T)BuildObject(typeof(T), handler);
         }
     }
 }

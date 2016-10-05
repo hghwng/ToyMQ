@@ -3,6 +3,6 @@ using System.Reflection;
 
 namespace ToyMQ.Proxy {
     public interface ProxyHandler {
-        object HandleCall(MethodInfo callee, object[] args);
+        object HandleCall(MethodBase callee, object[] args);
     }
 }

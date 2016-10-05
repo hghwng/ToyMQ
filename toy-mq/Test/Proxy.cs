@@ -8,15 +8,14 @@ namespace ToyMQ.Test {
     };
 
     public class MyHandler : ProxyHandler {
-        public object HandleCall(MethodInfo callee, object[] args) {
-            return null;
+        public object HandleCall(MethodBase callee, object[] args) {
+            return 2333;
         }
     };
 
     public class ProxyTest {
         public static void TestProxyfier() {
-            var proxifier = new Proxifier(typeof(MyFace));
-            var ret = (MyFace)proxifier.GetObject(new MyHandler());
+            var ret = Proxifier.BuildObject<MyFace>(new MyHandler());
             ret.PrintFn("2333");
         }
     }
