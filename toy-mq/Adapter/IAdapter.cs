@@ -1,18 +1,18 @@
 using System;
 
 namespace ToyMQ.Adapter {
-	public interface IAdapterFactory {
-		bool IsProtocolSupported(string url);
-		IAdapterServer CreateServer(string url);
-		IAdapter CreateClient(string url);
-	}
+    public interface IAdapterFactory {
+        bool IsProtocolSupported(string url);
+        IAdapterServer CreateServer(string url);
+        IAdapter CreateClient(string url);
+    }
 
-	public interface IAdapterServer {
-		IAdapter WaitForNewClient();
-	}
+    public interface IAdapterServer {
+        IAdapter WaitForNewClient();
+    }
 
-	public interface IAdapter {
-		int Send(byte[] data);
-		int Receive(byte[] data);
-	}
+    public interface IAdapter {
+        int Send(byte[] data);
+        int Receive(byte[] data);
+    }
 }
