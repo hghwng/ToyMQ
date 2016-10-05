@@ -25,7 +25,7 @@ namespace ToyMQ.Adapter {
 
         public IAdapter CreateClient(string url) {
             var endpoint = GetEndPointFromUri(new Uri(url));
-            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            var socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
             socket.Connect(endpoint);
             return new TCPAdapter(socket);
         }
@@ -39,7 +39,8 @@ namespace ToyMQ.Adapter {
         }
 
         public TCPAdapterServer(EndPoint endpoint) {
-            socket_ = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            socket_ = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
+            Console.WriteLine(endpoint);
             socket_.Bind(endpoint);
 
             const int kMaxPendingConnection = 20;
