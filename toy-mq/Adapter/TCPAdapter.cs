@@ -48,15 +48,26 @@ namespace ToyMQ.Adapter {
         }
     }
 
+    public class ConnectionClosedException : Exception {
+    }
+
     public class TCPAdapter : IAdapter {
         private Socket socket_;
 
         public int Send(byte[] data) {
-            return socket_.Send(data);
+            try {
+                return socket_.Send(data);
+            } catch (SocketException) {
+                throw new ConnectionClosedException();
+            }
         }
 
         public int Receive(byte[] data) {
-            return socket_.Receive(data);
+            try {
+              return socket_.Receive(data);
+            } catch (SocketException) {
+                throw new ConnectionClosedException();
+            }
         }
 
         public TCPAdapter(Socket socket) {
