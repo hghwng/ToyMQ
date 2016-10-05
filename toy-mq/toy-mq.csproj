@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -49,6 +48,8 @@
     <Compile Include="Test\Proxy.cs" />
     <Compile Include="Proxy\ProxyHandler.cs" />
     <Compile Include="Proxy\Proxifier.cs" />
+    <Compile Include="Proxy\ProxyClient.cs" />
+    <Compile Include="Proxy\ProxyServer.cs" />
     <Compile Include="Serializer\StringFieldSerializer.cs" />
     <Compile Include="Serializer\ArrayFieldSerializer.cs" />
   </ItemGroup>
