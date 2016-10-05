@@ -49,6 +49,8 @@
     <Compile Include="Test\Proxy.cs" />
     <Compile Include="Proxy\ProxyHandler.cs" />
     <Compile Include="Proxy\Proxifier.cs" />
+    <Compile Include="Serializer\StringFieldSerializer.cs" />
+    <Compile Include="Serializer\ArrayFieldSerializer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -10,6 +10,8 @@ namespace ToyMQ.Serializer {
         static FieldSerializer() {
             fieldSerializers_ = new Dictionary<Type, IFieldSerializer>();
             Register(new PrimitiveFieldSerializer());
+            Register(new StringFieldSerializer());
+            Register(new ArrayFieldSerializer());
         }
 
         public static void Register(IFieldSerializer serializer) {
@@ -64,7 +66,10 @@ namespace ToyMQ.Serializer {
 
             // FieldSet type
             var result = new List<byte>();
-            if (!IsFieldSetType(objectType)) throw new NotSupportedException("Unserializable data type");
+            if (!IsFieldSetType(objectType)) {
+                throw new NotSupportedException("Unserializable data type: " + objectType);
+            }
+
             foreach (var field in GetFieldList(objectType)) {
                   result.AddRange(Serialize(field.GetValue(obj)));
             }
@@ -73,11 +78,11 @@ namespace ToyMQ.Serializer {
         }
 
         public static object Deserialize(byte[] data, ref int offset, Type type) {
-            object obj = Activator.CreateInstance(type);
             if (fieldSerializers_.ContainsKey(type)) {
                 return fieldSerializers_[type].Deserialize(data, ref offset, type);
             }
 
+            object obj = Activator.CreateInstance(type);
             foreach (var field in GetFieldList(type)) {
                 field.SetValue(obj, Deserialize(data, ref offset, field.FieldType));
             }
